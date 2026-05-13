@@ -1,10 +1,17 @@
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
+const fs = require('fs'); // استدعاء مكتبة النظام لإدارة الملفات
 const app = express();
 const port = process.env.PORT || 3000;
 
-// إعداد تخزين الصور المرفوعة مؤقتاً
+// التأكد من وجود مجلد uploads قبل بدء السيرفر لتجنب خطأ التشغيل في Render
+const uploadDir = path.join(__dirname, 'uploads');
+if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// إعداد تخزين الصور المرفوعة
 const upload = multer({ dest: 'uploads/' });
 
 app.use(express.static('public'));
@@ -15,7 +22,7 @@ app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-// مسار العرض التقديمي (إذا أردت الاحتفاظ به)
+// مسار العرض التقديمي
 app.get('/slides', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/slides.html'));
 });
