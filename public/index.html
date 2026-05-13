@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ahmed-AI | منصة توليد الفيديو</title>
+    <style>
+        body { font-family: 'Arial', sans-serif; background: #050510; color: white; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; padding: 20px; text-align: center; }
+        .logo-img { width: 150px; height: 150px; border-radius: 20px; border: 2px solid #fbc531; margin-bottom: 15px; object-fit: cover; }
+        h1 { color: #fbc531; font-size: 2.2rem; }
+        .ai-card { background: rgba(255, 255, 255, 0.05); padding: 20px; border-radius: 15px; width: 100%; max-width: 450px; border: 1px solid rgba(251, 197, 49, 0.2); }
+        input, textarea { width: 100%; padding: 12px; margin: 10px 0; border-radius: 8px; border: none; background: #1a1a2e; color: white; box-sizing: border-box; }
+        textarea { height: 80px; }
+        .btn { background: #fbc531; color: #0a0a23; padding: 15px; border: none; border-radius: 8px; font-weight: bold; width: 100%; cursor: pointer; transition: 0.3s; }
+        .btn:hover { background: #fff; }
+        .footer { margin-top: auto; font-size: 0.7rem; color: #444; padding: 20px; }
+    </style>
+</head>
+<body>
+    <img src="https://i.postimg.cc/SsMPRn2x/IMG-1726.jpg" alt="Ahmed-AI" class="logo-img">
+    <h1>Ahmed-AI</h1>
+    <p>بوابتك لتوليد الفيديو بالذكاء الاصطناعي</p>
+
+    <div class="ai-card">
+        <label>ارفع صورتك:</label>
+        <input type="file" id="imgInput" accept="image/*">
+        <label>وصف المقطع:</label>
+        <textarea id="promptInput" placeholder="اكتب ما تريد أن تفعله الشخصية في الفيديو..."></textarea>
+        <button class="btn" onclick="startAI()">✨ إنشاء الفيديو</button>
+    </div>
+
+    <div class="footer">
+        DEVELOPED BY AHMED MOHAMMED ABDULRAHMAN | TEL: 971543496968
+    </div>
+
+    <script>
+        function startAI() {
+            const img = document.getElementById('imgInput').files[0];
+            const prompt = document.getElementById('promptInput').value;
+            if(!img || !prompt) return alert("أحمد، يرجى إكمال البيانات أولاً!");
+            
+            alert("تم إرسال الطلب لـ Ahmed-AI! جاري المعالجة وإرسال النتيجة لرقمك.");
+        }
+    </script>
+</body>
+</html>
