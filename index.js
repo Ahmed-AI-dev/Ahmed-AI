@@ -1,33 +1,48 @@
 const express = require('express');
 const path = require('path');
 const multer = require('multer');
-const fs = require('fs'); // استدعاء مكتبة النظام لإدارة الملفات
+const fs = require('fs');
+
 const app = express();
 const port = process.env.PORT || 3000;
 
-// التأكد من وجود مجلد uploads قبل بدء السيرفر لتجنب خطأ التشغيل في Render
+// تحديد مسار مجلد الرفع
 const uploadDir = path.join(__dirname, 'uploads');
+
+// حل مشكلة EEXIST: التأكد من المجلد قبل البدء
 if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
+    try {
+        fs.mkdirSync(uploadDir, { recursive: true });
+    } catch (err) {
+        console.log("Uploads folder already exists or handled by system.");
+    }
 }
 
 // إعداد تخزين الصور المرفوعة
-const upload = multer({ dest: 'uploads/' });
+const storage = multer.diskStorage({
+    destination: (req, file, cb) => {
+        cb(null, uploadDir);
+    },
+    filename: (req, file, cb) => {
+        cb(null, Date.now() + '-' + file.originalname);
+    }
+});
+
+const upload = multer({ storage: storage });
 
 app.use(express.static('public'));
 app.use(express.json());
 
-// مسار الصفحة الرئيسية لـ Ahmed-AI
+// مسارات الموقع لـ Ahmed-AI
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/index.html'));
 });
 
-// مسار العرض التقديمي
 app.get('/slides', (req, res) => {
     res.sendFile(path.join(__dirname, 'public/slides.html'));
 });
 
-// محاكاة معالجة الذكاء الاصطناعي
+// معالجة طلبات الذكاء الاصطناعي
 app.post('/generate', upload.single('image'), (req, res) => {
     const { prompt } = req.body;
     if (!req.file || !prompt) {
