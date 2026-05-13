@@ -5,187 +5,125 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ahmed-AI | بوابة توليد الفيديو</title>
     <style>
-        :root {
-            --primary-gold: #d4af37;
-            --bg-overlay: rgba(10, 10, 12, 0.85); /* طبقة شفافة فوق الخلفية */
-        }
-
-        body, html {
-            margin: 0;
-            padding: 0;
-            height: 100%;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            overflow-x: hidden;
-        }
-
-        /* جعل الصورة خلفية كاملة للشاشة */
-        .full-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop'); /* يمكنك تغيير الرابط بصورتك */
-            background-size: cover;
-            background-position: center;
-            z-index: -1;
+        :root { --primary-gold: #d4af37; --bg-overlay: rgba(0, 0, 0, 0.8); }
+        body, html { margin: 0; padding: 0; height: 100%; font-family: 'Segoe UI', sans-serif; color: white; overflow-x: hidden; }
+        
+        /* الخلفية كاملة الشاشة */
+        .full-bg {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000') no-repeat center center fixed;
+            background-size: cover; z-index: -1;
         }
 
         .container {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            background: var(--bg-overlay); /* تظليل فوق الخلفية لراحة العين */
-            padding: 20px;
-        }
-
-        .logo-container img {
-            width: 80px;
-            height: 80px;
-            border-radius: 15px;
-            border: 2px solid var(--primary-gold);
-            margin-bottom: 10px;
-        }
-
-        h1 {
-            color: var(--primary-gold);
-            margin: 0;
-            font-size: 2rem;
+            min-height: 100vh; display: flex; flex-direction: column;
+            align-items: center; justify-content: center; background: var(--bg-overlay); padding: 20px;
         }
 
         .main-card {
-            background: rgba(22, 22, 26, 0.95);
-            padding: 25px;
-            border-radius: 20px;
-            width: 100%;
-            max-width: 450px;
-            border: 1px solid var(--primary-gold);
-            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
-            margin-top: 20px;
+            background: rgba(22, 22, 26, 0.95); padding: 25px; border-radius: 20px;
+            width: 100%; max-width: 450px; border: 1px solid var(--primary-gold);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.8); text-align: center;
         }
 
-        .input-group {
-            margin-bottom: 15px;
+        .upload-box {
+            border: 2px dashed var(--primary-gold); padding: 20px; border-radius: 15px;
+            cursor: pointer; margin: 15px 0; transition: 0.3s;
         }
+        .upload-box:hover { background: rgba(212, 175, 55, 0.1); }
 
-        label {
-            display: block;
-            margin-bottom: 8px;
-            color: var(--primary-gold);
-            font-weight: bold;
-        }
-
-        input[type="text"], textarea {
-            width: 100%;
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid #3a3a3e;
-            background: #0a0a0c;
-            color: white;
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-
-        .upload-area {
-            border: 2px dashed var(--primary-gold);
-            padding: 20px;
-            border-radius: 15px;
-            text-align: center;
-            cursor: pointer;
-            margin-bottom: 15px;
+        textarea {
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #444;
+            background: #0a0a0c; color: white; box-sizing: border-box; font-size: 1rem; margin-bottom: 15px;
         }
 
         button {
-            background: linear-gradient(45deg, #d4af37, #f2d06b);
-            color: black;
-            border: none;
-            padding: 15px;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: bold;
-            cursor: pointer;
-            width: 100%;
-            transition: 0.3s;
+            background: linear-gradient(45deg, #d4af37, #f2d06b); color: black;
+            border: none; padding: 15px; border-radius: 12px; font-weight: bold;
+            width: 100%; cursor: pointer; font-size: 1.1rem;
         }
 
-        button:hover { transform: scale(1.02); }
-
-        #result-area {
-            display: none;
-            margin-top: 20px;
-            text-align: center;
+        /* منطقة النتائج */
+        #result-display { margin-top: 20px; display: none; }
+        .spinner {
+            border: 4px solid rgba(255,255,255,0.1); border-left: 4px solid var(--primary-gold);
+            border-radius: 50%; width: 30px; height: 30px; animation: spin 1s linear infinite; margin: 10px auto;
         }
-
-        footer {
-            margin-top: 30px;
-            text-align: center;
-            color: white;
-        }
-
-        .dev-btn {
-            color: var(--primary-gold);
-            text-decoration: none;
-            border: 1px solid var(--primary-gold);
-            padding: 5px 15px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-        }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body>
 
-    <div class="full-background"></div>
+    <div class="full-bg"></div>
 
     <div class="container">
-        <div class="logo-container">
-            <img src="https://i.postimg.cc/kGR2w7fj/IMG-1936.jpg" alt="Logo">
-        </div>
-        <h1>Ahmed-AI</h1>
-
+        <img src="https://i.postimg.cc/kGR2w7fj/IMG-1936.jpg" style="width: 70px; border-radius: 12px; border: 2px solid var(--primary-gold); margin-bottom: 10px;">
+        <h1 style="color: var(--primary-gold); margin-bottom: 20px;">Ahmed-AI</h1>
+        
         <div class="main-card">
-            <div class="input-group">
-                <label>1. الصورة الأساسية</label>
-                <div class="upload-area" onclick="document.getElementById('imageInput').click()">
-                    <span id="fileName">اضغط هنا لرفع الصورة</span>
-                    <input type="file" id="imageInput" style="display: none;" onchange="updateFileName()">
+            <div class="upload-box" onclick="document.getElementById('imageInput').click()">
+                <span id="fileName">📁 اضغط لرفع الصورة</span>
+                <input type="file" id="imageInput" style="display: none;" onchange="document.getElementById('fileName').innerText = this.files[0].name">
+            </div>
+            
+            <textarea id="promptInput" rows="3" placeholder="اكتب شرح المقطع هنا..."></textarea>
+            
+            <button id="btnAction" onclick="startGeneration()">✨ ابدأ التصميم الآن</button>
+
+            <div id="result-display">
+                <div id="loading-ui">
+                    <div class="spinner"></div>
+                    <p>جاري معالجة الفيديو في مختبرات Ahmed-AI...</p>
+                </div>
+                <div id="video-ui" style="display: none;">
+                    <video id="outputVideo" width="100%" controls style="border-radius: 10px; border: 1px solid var(--primary-gold);"></video>
+                    <a id="downloadBtn" href="#" download style="display: block; margin-top: 10px; color: var(--primary-gold); text-decoration: none; font-weight: bold;">📥 تحميل المقطع</a>
                 </div>
             </div>
-
-            <div class="input-group">
-                <label>2. شرح التصميم (Prompt)</label>
-                <textarea id="promptInput" rows="3" placeholder="اكتب ماذا تريد أن يحدث في المقطع..."></textarea>
-            </div>
-
-            <button onclick="generateVideo()">✨ ابدأ التصميم الآن</button>
-
-            <div id="result-area">
-                <p id="statusText">جاري معالجة طلبك...</p>
-            </div>
         </div>
 
-        <footer>
-            <p>DEVELOPED BY AHMED MOHAMMED ABDULRAHMAN</p>
-            <a href="https://wa.me/971543496968" class="dev-btn">تواصل مع المطور</a>
+        <footer style="margin-top: 30px; text-align: center; opacity: 0.8;">
+            <p style="font-size: 0.8rem; letter-spacing: 1px;">DEVELOPED BY AHMED MOHAMMED ABDULRAHMAN</p>
+            <a href="https://wa.me/971543496968" style="color: var(--primary-gold); text-decoration: none; border: 1px solid; padding: 5px 15px; border-radius: 20px; font-size: 0.7rem;">تواصل مع المطور</a>
         </footer>
     </div>
 
     <script>
-        function updateFileName() {
-            const input = document.getElementById('imageInput');
-            document.getElementById('fileName').innerText = input.files[0].name;
-        }
+        async function startGeneration() {
+            const file = document.getElementById('imageInput').files[0];
+            const prompt = document.getElementById('promptInput').value;
+            const resDisplay = document.getElementById('result-display');
+            const loadingUi = document.getElementById('loading-ui');
+            const videoUi = document.getElementById('video-ui');
+            const btn = document.getElementById('btnAction');
 
-        function generateVideo() {
-            const resultArea = document.getElementById('result-area');
-            const statusText = document.getElementById('statusText');
-            
-            resultArea.style.display = 'block';
-            statusText.innerText = "جاري إرسال البيانات للخادم...";
+            if (!file || !prompt) { alert("أكمل البيانات يا أحمد!"); return; }
 
-            // ملاحظة: هنا نحتاج لربط الـ API الخاص بـ index.js
-            console.log("تم ضغط الزر، بانتظار ملف الـ Backend");
+            // تجهيز الواجهة
+            btn.disabled = true;
+            resDisplay.style.display = 'block';
+            loadingUi.style.display = 'block';
+            videoUi.style.display = 'none';
+
+            const formData = new FormData();
+            formData.append('image', file);
+            formData.append('prompt', prompt);
+
+            try {
+                const response = await fetch('/generate', { method: 'POST', body: formData });
+                const data = await response.json();
+
+                if (data.success) {
+                    loadingUi.style.display = 'none';
+                    videoUi.style.display = 'block';
+                    document.getElementById('outputVideo').src = data.videoUrl;
+                    document.getElementById('downloadBtn').href = data.videoUrl;
+                }
+            } catch (e) {
+                alert("حدث خطأ في الاتصال بالسيرفر");
+            } finally {
+                btn.disabled = false;
+            }
         }
     </script>
 </body>
