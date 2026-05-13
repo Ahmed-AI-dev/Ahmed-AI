@@ -7,89 +7,101 @@
     <style>
         :root {
             --primary-gold: #d4af37;
-            --bg-dark: #0a0a0c;
-            --card-bg: #16161a;
-            --text-gray: #a0a0a0;
+            --bg-overlay: rgba(10, 10, 12, 0.85); /* طبقة شفافة فوق الخلفية */
         }
 
-        body {
-            background-color: var(--bg-dark);
-            color: white;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        body, html {
             margin: 0;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
+            padding: 0;
+            height: 100%;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            overflow-x: hidden;
         }
 
-        /* واجهة الموقع (الصورة العلوية) */
-        .hero-section {
+        /* جعل الصورة خلفية كاملة للشاشة */
+        .full-background {
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            height: 250px;
-            background: linear-gradient(rgba(0,0,0,0.5), rgba(10,10,12,1)), 
-                        url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop'); /* استبدل هذا الرابط بصورتك */
+            height: 100%;
+            background-image: url('https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1000&auto=format&fit=crop'); /* يمكنك تغيير الرابط بصورتك */
             background-size: cover;
             background-position: center;
+            z-index: -1;
+        }
+
+        .container {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            border-bottom: 2px solid var(--primary-gold);
+            justify-content: center;
+            background: var(--bg-overlay); /* تظليل فوق الخلفية لراحة العين */
+            padding: 20px;
         }
 
         .logo-container img {
-            width: 100px;
-            height: 100px;
-            border-radius: 20px;
+            width: 80px;
+            height: 80px;
+            border-radius: 15px;
             border: 2px solid var(--primary-gold);
-            box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
             margin-bottom: 10px;
         }
 
         h1 {
             color: var(--primary-gold);
-            font-size: 2.5rem;
-            margin: 10px 0;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+            margin: 0;
+            font-size: 2rem;
         }
 
-        .subtitle {
-            color: var(--text-gray);
-            font-size: 1.1rem;
-            margin-bottom: 20px;
-        }
-
-        /* حاوية العمل */
         .main-card {
-            background: var(--card-bg);
-            padding: 30px;
-            border-radius: 25px;
-            width: 90%;
-            max-width: 500px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-            margin-top: -40px;
-            border: 1px solid #2a2a2e;
+            background: rgba(22, 22, 26, 0.95);
+            padding: 25px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 450px;
+            border: 1px solid var(--primary-gold);
+            box-shadow: 0 15px 35px rgba(0,0,0,0.7);
+            margin-top: 20px;
         }
 
-        .upload-section {
-            text-align: center;
-            border: 2px dashed #3a3a3e;
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--primary-gold);
+            font-weight: bold;
+        }
+
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid #3a3a3e;
+            background: #0a0a0c;
+            color: white;
+            box-sizing: border-box;
+            font-size: 1rem;
+        }
+
+        .upload-area {
+            border: 2px dashed var(--primary-gold);
             padding: 20px;
             border-radius: 15px;
-            margin-bottom: 20px;
-            transition: 0.3s;
-        }
-
-        .upload-section:hover {
-            border-color: var(--primary-gold);
+            text-align: center;
+            cursor: pointer;
+            margin-bottom: 15px;
         }
 
         button {
             background: linear-gradient(45deg, #d4af37, #f2d06b);
             color: black;
             border: none;
-            padding: 15px 30px;
+            padding: 15px;
             border-radius: 12px;
             font-size: 1.1rem;
             font-weight: bold;
@@ -98,120 +110,82 @@
             transition: 0.3s;
         }
 
-        button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 5px 15px rgba(212, 175, 55, 0.4);
-        }
+        button:hover { transform: scale(1.02); }
 
-        /* منطقة النتيجة */
         #result-area {
             display: none;
-            margin-top: 25px;
-            padding: 20px;
-            background: #1e1e24;
-            border-radius: 15px;
-            border-right: 4px solid var(--primary-gold);
-        }
-
-        .loading-spinner {
-            border: 4px solid rgba(255,255,255,0.1);
-            border-left: 4px solid var(--primary-gold);
-            border-radius: 50%;
-            width: 30px;
-            height: 30px;
-            animation: spin 1s linear infinite;
-            margin: 10px auto;
-        }
-
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-
-        /* تذييل الصفحة وزر المطور */
-        footer {
-            margin-top: auto;
-            padding: 40px 20px;
+            margin-top: 20px;
             text-align: center;
-            color: #555;
-            font-size: 0.9rem;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: white;
         }
 
         .dev-btn {
-            display: inline-block;
-            margin-top: 15px;
             color: var(--primary-gold);
             text-decoration: none;
             border: 1px solid var(--primary-gold);
             padding: 5px 15px;
             border-radius: 20px;
             font-size: 0.8rem;
-            transition: 0.3s;
-        }
-
-        .dev-btn:hover {
-            background: var(--primary-gold);
-            color: black;
         }
     </style>
 </head>
 <body>
 
-    <div class="hero-section">
+    <div class="full-background"></div>
+
+    <div class="container">
         <div class="logo-container">
-            <!-- استبدل الرابط أدناه بصورة اللوجو الخاصة بك -->
             <img src="https://i.postimg.cc/kGR2w7fj/IMG-1936.jpg" alt="Logo">
         </div>
         <h1>Ahmed-AI</h1>
-        <p class="subtitle">بوابتك لتوليد الفيديو بالذكاء الاصطناعي</p>
-    </div>
 
-    <div class="main-card">
-        <div class="upload-section">
-            <p>ارفع صورتك هنا</p>
-            <input type="file" id="imageInput" style="display: none;">
-            <button onclick="document.getElementById('imageInput').click()" style="background: #2a2a2e; color: white; font-size: 0.9rem; width: auto;">اختيار ملف</button>
-        </div>
-
-        <button onclick="generateVideo()">✨ إنشاء الفيديو</button>
-
-        <!-- منطقة ظهور النتيجة -->
-        <div id="result-area">
-            <div id="loading-state">
-                <div class="loading-spinner"></div>
-                <p style="text-align: center;">جاري المعالجة... يرجى الانتظار</p>
-            </div>
-            <div id="success-state" style="display: none;">
-                <p style="color: #4CAF50; font-weight: bold;">✅ تم التجهيز بنجاح!</p>
-                <div id="video-placeholder" style="background: #000; height: 200px; display: flex; align-items: center; justify-content: center; border-radius: 10px;">
-                    <p>رابط الفيديو سيظهر هنا</p>
+        <div class="main-card">
+            <div class="input-group">
+                <label>1. الصورة الأساسية</label>
+                <div class="upload-area" onclick="document.getElementById('imageInput').click()">
+                    <span id="fileName">اضغط هنا لرفع الصورة</span>
+                    <input type="file" id="imageInput" style="display: none;" onchange="updateFileName()">
                 </div>
-                <a href="#" id="download-link" style="color: var(--primary-gold); display: block; margin-top: 10px; text-align: center;">تحميل الفيديو</a>
+            </div>
+
+            <div class="input-group">
+                <label>2. شرح التصميم (Prompt)</label>
+                <textarea id="promptInput" rows="3" placeholder="اكتب ماذا تريد أن يحدث في المقطع..."></textarea>
+            </div>
+
+            <button onclick="generateVideo()">✨ ابدأ التصميم الآن</button>
+
+            <div id="result-area">
+                <p id="statusText">جاري معالجة طلبك...</p>
             </div>
         </div>
-    </div>
 
-    <footer>
-        <p>DEVELOPED BY AHMED MOHAMMED ABDULRAHMAN</p>
-        <!-- زر المطور المطلبوب -->
-        <a href="https://wa.me/971543496968" class="dev-btn">تواصل مع المطور</a>
-    </footer>
+        <footer>
+            <p>DEVELOPED BY AHMED MOHAMMED ABDULRAHMAN</p>
+            <a href="https://wa.me/971543496968" class="dev-btn">تواصل مع المطور</a>
+        </footer>
+    </div>
 
     <script>
+        function updateFileName() {
+            const input = document.getElementById('imageInput');
+            document.getElementById('fileName').innerText = input.files[0].name;
+        }
+
         function generateVideo() {
             const resultArea = document.getElementById('result-area');
-            const loadingState = document.getElementById('loading-state');
-            const successState = document.getElementById('success-state');
-
-            // إظهار منطقة النتائج وبدء التحميل
+            const statusText = document.getElementById('statusText');
+            
             resultArea.style.display = 'block';
-            loadingState.style.display = 'block';
-            successState.style.display = 'none';
+            statusText.innerText = "جاري إرسال البيانات للخادم...";
 
-            // محاكاة لعملية المعالجة (تستبدل لاحقاً بربط API الحقيقي)
-            setTimeout(() => {
-                loadingState.style.display = 'none';
-                successState.style.display = 'block';
-                // هنا يتم وضع الرابط الفعلي للفيديو الناتج
-                document.getElementById('video-placeholder').innerHTML = '<p style="color: white;">الفيديو جاهز للمشاهدة</p>';
-            }, 3000); // 3 ثواني محاكاة
+            // ملاحظة: هنا نحتاج لربط الـ API الخاص بـ index.js
+            console.log("تم ضغط الزر، بانتظار ملف الـ Backend");
         }
     </script>
 </body>
